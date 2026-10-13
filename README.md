@@ -59,7 +59,7 @@ sudo apt install -y --no-install-recommends \
   python3-gpiozero python3-requests sqlite3 git \
   libegl1 libegl-mesa0 libgles2 libgl1-mesa-dri fonts-dejavu-core
 
-git clone https://github.com/<utente>/<repo>.git cornice
+git clone https://github.com/Walimay/PhotoFrame.git cornice
 cd cornice && sudo ./scripts/install.sh
 sudo systemctl enable --now cornice-ui cornice-web
 ```
