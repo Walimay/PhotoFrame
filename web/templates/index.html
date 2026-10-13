@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block titolo %}Foto{% endblock %}
+{% block contenuto %}
+
+<form class="caricamento" method="post" action="{{ url_for('upload') }}"
+      enctype="multipart/form-data">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <label class="zona-file" for="file">
+    <strong>Aggiungi foto</strong>
+    <span>Scegli uno o più file dal telefono o dal computer</span>
+    <input id="file" name="foto" type="file" accept="image/*" multiple required>
+  </label>
+  <button type="submit" class="primario">Carica</button>
+</form>
+
+<div id="stato-coda" class="stato {% if not stato.in_attesa %}nascosto{% endif %}">
+  <span class="rotella"></span>
+  <span id="testo-coda">{{ stato.in_attesa }} in elaborazione…</span>
+</div>
+
+{% if stato.errori %}
+<div class="avvisi">
+  {% for errore in stato.errori %}<p class="avviso errore">{{ errore }}</p>{% endfor %}
+  <form method="post" action="{{ url_for('pulisci_coda') }}">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <button type="submit" class="minuto">Nascondi</button>
+  </form>
+</div>
+{% endif %}
+
+<p class="conteggio">{{ foto|length }} foto in archivio, {{ totale_attive }} in rotazione.</p>
+
+{% if not foto %}
+  <p class="vuoto">Nessuna foto ancora. Caricane qualcuna qui sopra: compariranno
+  sulla cornice entro una ventina di secondi.</p>
+{% endif %}
+
+<ul class="griglia">
+{% for f in foto %}
+  <li class="scheda {% if not f.active %}nascosta{% endif %}" id="foto-{{ f.id }}">
+    <a href="{{ url_for('foto_intera', nome=f.filename) }}" target="_blank" rel="noopener">
+      <img src="{{ url_for('miniatura', nome=f.filename) }}" alt="" loading="lazy">
+    </a>
+
+    <form method="post" action="{{ url_for('modifica_didascalia', photo_id=f.id) }}">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <input name="caption" value="{{ f.caption or '' }}" placeholder="Didascalia"
+             maxlength="120">
+      <button type="submit" class="minuto">Salva</button>
+    </form>
+
+    <p class="meta">
+      {% if f.taken_at %}{{ f.taken_at }}{% else %}data sconosciuta{% endif %}
+      {% if not f.active %} · nascosta{% endif %}
+    </p>
+
+    <div class="azioni">
+      {% for direzione, simbolo in [('up', '↑'), ('down', '↓')] %}
+      <form method="post" action="{{ url_for('sposta', photo_id=f.id) }}">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
+        <input type="hidden" name="direzione" value="{{ direzione }}">
+        <button type="submit" class="minuto" title="Sposta">{{ simbolo }}</button>
+      </form>
+      {% endfor %}
+
+      <form method="post" action="{{ url_for('cambia_visibilita', photo_id=f.id) }}">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
+        <button type="submit" class="minuto">{{ 'Mostra' if not f.active else 'Nascondi' }}</button>
+      </form>
+
+      <form method="post" action="{{ url_for('elimina', photo_id=f.id) }}"
+            onsubmit="return confirm('Eliminare questa foto definitivamente?')">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
+        <button type="submit" class="minuto pericolo">Elimina</button>
+      </form>
+    </div>
+  </li>
+{% endfor %}
+</ul>
+{% endblock %}
+
+{% block script %}
+<script>
+// Avanzamento della coda di elaborazione: le foto arrivano una alla volta,
+// e a fine coda la pagina si ricarica da sola per mostrarle.
+(function () {
+  var riquadro = document.getElementById('stato-coda');
+  var testo = document.getElementById('testo-coda');
+  if (!riquadro) return;
+  var eraAttiva = !riquadro.classList.contains('nascosto');
+
+  function controlla() {
+    fetch('/coda', { credentials: 'same-origin' })
+      .then(function (r) { return r.json(); })
+      .then(function (dati) {
+        if (dati.in_attesa > 0) {
+          eraAttiva = true;
+          riquadro.classList.remove('nascosto');
+          testo.textContent = dati.in_attesa + ' in elaborazione…';
+          setTimeout(controlla, 1500);
+        } else if (eraAttiva) {
+          window.location.reload();
+        }
+      })
+      .catch(function () { setTimeout(controlla, 4000); });
+  }
+  if (eraAttiva) setTimeout(controlla, 1200);
+})();
+</script>
+{% endblock %}

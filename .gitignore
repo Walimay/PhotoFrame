@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Dati di runtime: non appartengono al repository
+*.db
+*.db-wal
+*.db-shm
+/var/
+anteprime/
+
+# Font: scaricabili da Google Fonts, licenza propria
+assets/fonts/
+
+# Sistema
+.DS_Store
+*.swp

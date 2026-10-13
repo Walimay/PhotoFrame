@@ -1,0 +1,181 @@
+/* Stessa palette della cornice: scuro, sobrio, leggibile da telefono. */
+:root {
+  --fondo: #0e1013;
+  --superficie: #16191e;
+  --superficie-alta: #1d2127;
+  --bordo: #2a2f37;
+  --testo: #f2f3f5;
+  --testo-tenue: #969ba3;
+  --accento: #5dcaa5;
+  --accento-freddo: #85b7eb;
+  --pericolo: #e24b4a;
+  --raggio: 10px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--testo);
+  font-family: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+main { max-width: 1000px; margin: 0 auto; padding: 20px 16px 64px; }
+
+h1 { font-size: 26px; font-weight: 600; margin: 8px 0 20px; }
+h2 { font-size: 17px; font-weight: 600; margin: 0 0 14px; color: var(--testo-tenue); }
+
+a { color: var(--accento-freddo); }
+
+/* ------------------------------------------------------------ intestazione */
+
+.barra {
+  display: flex; align-items: center; gap: 18px;
+  padding: 12px 16px;
+  background: var(--superficie);
+  border-bottom: 1px solid var(--bordo);
+  position: sticky; top: 0; z-index: 10;
+}
+.marchio { font-weight: 600; color: var(--testo); text-decoration: none; }
+.barra nav { display: flex; gap: 16px; margin-left: auto; }
+.barra nav a { color: var(--testo-tenue); text-decoration: none; font-size: 15px; }
+.barra nav a.attivo, .barra nav a:hover { color: var(--testo); }
+
+.telecomando {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  max-width: 1000px; margin: 0 auto; padding: 10px 16px 0;
+}
+.telecomando > span { color: var(--testo-tenue); font-size: 14px; margin-right: 4px; }
+.telecomando form { display: inline; }
+
+/* ------------------------------------------------------------- componenti */
+
+button {
+  font: inherit; cursor: pointer;
+  background: var(--superficie-alta);
+  color: var(--testo);
+  border: 1px solid var(--bordo);
+  border-radius: var(--raggio);
+  padding: 9px 16px;
+  min-height: 40px;
+}
+button:hover { border-color: #3c424c; }
+button:active { transform: scale(0.98); }
+
+button.primario {
+  background: var(--accento); color: #06251b; border-color: transparent;
+  font-weight: 600;
+}
+button.minuto { padding: 6px 11px; min-height: 34px; font-size: 14px; }
+button.pericolo { color: var(--pericolo); }
+
+input[type=text], input[type=password], input[type=number], select,
+.scheda input[name=caption] {
+  font: inherit;
+  width: 100%;
+  background: var(--fondo);
+  color: var(--testo);
+  border: 1px solid var(--bordo);
+  border-radius: var(--raggio);
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+input:focus, select:focus, button:focus-visible {
+  outline: 2px solid var(--accento-freddo); outline-offset: 1px;
+}
+
+label { display: block; font-size: 14px; color: var(--testo-tenue); margin-bottom: 6px; }
+label.interruttore {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--testo); font-size: 16px; margin: 0 0 14px;
+}
+label.interruttore input { width: 20px; height: 20px; accent-color: var(--accento); }
+
+.nota { font-size: 13px; color: var(--testo-tenue); margin: -6px 0 18px; }
+.sottotitolo { color: var(--testo-tenue); margin-top: -8px; }
+
+.riquadro-stretto {
+  max-width: 380px; margin: 12vh auto 0;
+  background: var(--superficie); border: 1px solid var(--bordo);
+  border-radius: 14px; padding: 28px 24px;
+}
+.riquadro-stretto button { width: 100%; }
+
+.avvisi { margin-bottom: 18px; }
+.avviso {
+  margin: 0 0 8px; padding: 11px 14px; border-radius: var(--raggio);
+  border-left: 3px solid var(--accento); background: var(--superficie);
+  font-size: 15px;
+}
+.avviso.errore { border-left-color: var(--pericolo); }
+
+/* ----------------------------------------------------------- caricamento */
+
+.caricamento {
+  background: var(--superficie); border: 1px solid var(--bordo);
+  border-radius: 14px; padding: 18px; margin-bottom: 18px;
+}
+.zona-file {
+  display: block; text-align: center; padding: 22px 12px; margin-bottom: 14px;
+  border: 1px dashed var(--bordo); border-radius: var(--raggio);
+  cursor: pointer; color: var(--testo-tenue);
+}
+.zona-file strong { display: block; color: var(--testo); font-size: 17px; margin-bottom: 4px; }
+.zona-file input { display: block; margin: 14px auto 0; max-width: 100%; }
+.caricamento button { width: 100%; }
+
+.stato {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--superficie); border: 1px solid var(--bordo);
+  border-radius: var(--raggio); padding: 12px 14px; margin-bottom: 18px;
+  color: var(--testo-tenue);
+}
+.stato.nascosto { display: none; }
+.rotella {
+  width: 15px; height: 15px; flex: none;
+  border: 2px solid var(--bordo); border-top-color: var(--accento);
+  border-radius: 50%; animation: gira 0.8s linear infinite;
+}
+@keyframes gira { to { transform: rotate(360deg); } }
+
+.conteggio { color: var(--testo-tenue); font-size: 14px; }
+.vuoto { color: var(--testo-tenue); padding: 32px 0; }
+
+/* -------------------------------------------------------------- galleria */
+
+.griglia {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+}
+.scheda {
+  background: var(--superficie); border: 1px solid var(--bordo);
+  border-radius: 14px; padding: 12px;
+}
+.scheda.nascosta { opacity: 0.55; }
+.scheda img {
+  width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
+  border-radius: var(--raggio); background: #000; display: block; margin-bottom: 12px;
+}
+.scheda form { display: flex; gap: 6px; align-items: flex-start; }
+.scheda input[name=caption] { margin-bottom: 0; }
+.scheda .meta { font-size: 13px; color: var(--testo-tenue); margin: 10px 0 10px; }
+.azioni { display: flex; flex-wrap: wrap; gap: 6px; }
+.azioni form { display: inline; }
+
+/* ----------------------------------------------------------- impostazioni */
+
+.impostazioni section {
+  background: var(--superficie); border: 1px solid var(--bordo);
+  border-radius: 14px; padding: 18px; margin-bottom: 16px;
+}
+.impostazioni > button { width: 100%; max-width: 280px; }
+
+@media (max-width: 520px) {
+  .griglia { grid-template-columns: 1fr; }
+  main { padding: 16px 12px 56px; }
+}

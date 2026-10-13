@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0e1013">
+<title>{% block titolo %}Cornice{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+{% if session.autenticato %}
+<header class="barra">
+  <a class="marchio" href="{{ url_for('index') }}">Cornice</a>
+  <nav>
+    <a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="attivo"{% endif %}>Foto</a>
+    <a href="{{ url_for('impostazioni') }}" {% if request.endpoint == 'impostazioni' %}class="attivo"{% endif %}>Impostazioni</a>
+    <a href="{{ url_for('logout') }}">Esci</a>
+  </nav>
+</header>
+
+<div class="telecomando">
+  <span>Display</span>
+  {% for comando, etichetta in [('prev', 'Indietro'), ('next', 'Avanti'), ('reload', 'Ricarica')] %}
+  <form method="post" action="{{ url_for('controllo', comando=comando) }}">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <button type="submit">{{ etichetta }}</button>
+  </form>
+  {% endfor %}
+</div>
+{% endif %}
+
+<main>
+  {% with messaggi = get_flashed_messages(with_categories=true) %}
+    {% if messaggi %}
+      <div class="avvisi">
+      {% for categoria, testo in messaggi %}
+        <p class="avviso {{ categoria }}">{{ testo }}</p>
+      {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block contenuto %}{% endblock %}
+</main>
+
+{% block script %}{% endblock %}
+</body>
+</html>

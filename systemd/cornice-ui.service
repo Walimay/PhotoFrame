@@ -1,0 +1,29 @@
+[Unit]
+Description=Cornice digitale - interfaccia
+After=network-online.target systemd-timesyncd.service
+Wants=network-online.target
+# Togliere il commento quando la cornice e' in produzione: libera tty1,
+# che altrimenti puo' contendere il DRM master a SDL.
+#Conflicts=getty@tty1.service
+
+[Service]
+Type=simple
+User=sysadmin
+WorkingDirectory=/opt/cornice
+Environment=PYTHONPATH=/opt/cornice
+Environment=PYTHONUNBUFFERED=1
+Environment=PYGAME_HIDE_SUPPORT_PROMPT=1
+Environment=SDL_VIDEODRIVER=dummy
+Environment=SDL_AUDIODRIVER=dummy
+# lgpio scrive i suoi file di notifica nella directory di lavoro:
+# /opt/cornice e' di root, quindi gli si indica quella dei dati.
+Environment=LG_WD=/var/lib/cornice
+Environment=GPIOZERO_PIN_FACTORY=lgpio
+ExecStart=/usr/bin/python3 -m ui.main
+Restart=always
+RestartSec=3
+# L'interfaccia non deve mai far cadere il sistema sotto memoria.
+Nice=-5
+
+[Install]
+WantedBy=multi-user.target

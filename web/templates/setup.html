@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block titolo %}Primo accesso{% endblock %}
+{% block contenuto %}
+<div class="riquadro-stretto">
+  <h1>Primo accesso</h1>
+  <p class="sottotitolo">Scegli una password per proteggere la pagina di gestione.
+  Serve solo su questa rete, ma chiunque sia collegato potrebbe arrivarci.</p>
+  <form method="post">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="new-password" autofocus required>
+    <label for="conferma">Ripeti la password</label>
+    <input id="conferma" name="conferma" type="password" autocomplete="new-password" required>
+    <button type="submit" class="primario">Imposta</button>
+  </form>
+</div>
+{% endblock %}

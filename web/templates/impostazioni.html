@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block titolo %}Impostazioni{% endblock %}
+{% block contenuto %}
+<h1>Impostazioni</h1>
+
+<form method="post" class="impostazioni">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+
+  <section>
+    <h2>Rotazione</h2>
+
+    <label for="slide_seconds">Durata di ogni foto (secondi)</label>
+    <input id="slide_seconds" name="slide_seconds" type="number" min="3" max="3600"
+           value="{{ valori.slide_seconds }}">
+
+    <label for="fade_ms">Dissolvenza (millisecondi)</label>
+    <input id="fade_ms" name="fade_ms" type="number" min="0" max="5000" step="50"
+           value="{{ valori.fade_ms }}">
+    <p class="nota">Zero per il taglio netto. Sotto i 600 ms su questo hardware
+    la dissolvenza ha pochi fotogrammi e si vede a scatti.</p>
+
+    <label class="interruttore">
+      <input type="checkbox" name="shuffle" {% if valori.shuffle == '1' %}checked{% endif %}>
+      Ordine casuale
+    </label>
+  </section>
+
+  <section>
+    <h2>Schermata</h2>
+
+    <label class="interruttore">
+      <input type="checkbox" name="show_clock" {% if valori.show_clock == '1' %}checked{% endif %}>
+      Mostra l'orologio in alto a sinistra
+    </label>
+
+    <label class="interruttore">
+      <input type="checkbox" name="show_caption" {% if valori.show_caption == '1' %}checked{% endif %}>
+      Mostra la didascalia in basso a destra
+    </label>
+
+    <label for="splash_seconds">Durata della schermata di avvio (secondi)</label>
+    <input id="splash_seconds" name="splash_seconds" type="number" min="0" max="60"
+           value="{{ valori.splash_seconds }}">
+
+    <label for="photo_fit">Adattamento delle foto</label>
+    <select id="photo_fit" name="photo_fit">
+      <option value="contain" {% if valori.photo_fit == 'contain' %}selected{% endif %}>
+        Intera, con bande nere
+      </option>
+      <option value="cover" {% if valori.photo_fit == 'cover' %}selected{% endif %}>
+        Riempi lo schermo, ritagliando
+      </option>
+    </select>
+    <p class="nota">Agisce al caricamento, non sulle foto già in archivio:
+    cambiandolo vanno ricaricate.</p>
+  </section>
+
+  <section>
+    <h2>Pulsanti</h2>
+
+    <label for="pin_button_a">Pin del pulsante A — foto successiva</label>
+    <input id="pin_button_a" name="pin_button_a" type="number" min="0" max="27"
+           value="{{ valori.pin_button_a }}">
+
+    <label for="pin_button_b">Pin del pulsante B — foto precedente</label>
+    <input id="pin_button_b" name="pin_button_b" type="number" min="0" max="27"
+           value="{{ valori.pin_button_b }}">
+
+    <label for="hold_reboot">Secondi di pressione su A per riavviare</label>
+    <input id="hold_reboot" name="hold_reboot" type="number" min="1" max="30"
+           value="{{ valori.hold_reboot }}">
+
+    <label for="hold_shutdown">Secondi di pressione su B per spegnere</label>
+    <input id="hold_shutdown" name="hold_shutdown" type="number" min="1" max="30"
+           value="{{ valori.hold_shutdown }}">
+    <p class="nota">I numeri sono quelli GPIO, non la posizione fisica sul
+    connettore. I pin vengono letti all'avvio: dopo averli cambiati riavvia
+    il servizio del display.</p>
+  </section>
+
+  <section>
+    <h2>Password</h2>
+    <label for="nuova_password">Nuova password</label>
+    <input id="nuova_password" name="nuova_password" type="password"
+           autocomplete="new-password" placeholder="lascia vuoto per non cambiarla">
+    <label for="conferma_password">Ripeti la nuova password</label>
+    <input id="conferma_password" name="conferma_password" type="password"
+           autocomplete="new-password">
+  </section>
+
+  <button type="submit" class="primario">Salva</button>
+</form>
+{% endblock %}
