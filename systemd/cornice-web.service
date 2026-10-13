@@ -4,7 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-User=sysadmin
+# install.sh sostituisce questo con l'utente che lancia lo script.
+User=pi
 WorkingDirectory=/opt/cornice
 Environment=PYTHONPATH=/opt/cornice
 Environment=PYTHONUNBUFFERED=1
